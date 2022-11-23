@@ -1,0 +1,184 @@
+{% extends 'products/shared/base.html' %}
+
+{% block content %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer page</title>
+
+</head>
+
+<body>
+
+
+    <!-- Carousel -->
+    <!-- slider -->
+
+    <section class="about-us-slider swiper-container p-relative">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide slide-item">
+                <img src="static/img/carousel-1.jpg" class="img-fluid full-width" alt="Banner">
+                <div class="transform-center">
+                    <div class="container">
+                        <div class="row justify-content-start">
+                            <div class="col-lg-7 align-self-center">
+                                <div class="right-side-content">
+                                    <!-- <h1 class="text-custom-white fw-600">Increase takeout sales by 50%</h1>
+                                        <h3 class="text-custom-white fw-400">with the largest delivery platform in the
+                                            U.S. and Canada</h3> -->
+                                    <a href="restaurant.html" class="btn-second btn-submit">Learn More.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay overlay-bg"></div>
+            </div>
+            <div class="swiper-slide slide-item">
+                <img src="static/img/carousel-2.jpg" class="img-fluid full-width" alt="Banner">
+                <div class="transform-center">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 align-self-center">
+                                <div class="right-side-content text-center">
+                                    <!-- <h1 class="text-custom-white fw-600">Increase takeout sales by 50%</h1>
+                                        <h3 class="text-custom-white fw-400">with the largest delivery platform in the
+                                            U.S. and Canada</h3> -->
+                                    <a href="restaurant.html" class="btn-second btn-submit">Learn More.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay overlay-bg"></div>
+            </div>
+            <div class="swiper-slide slide-item">
+                <img src="static/img/carousel-3.jpg" class="img-fluid full-width" alt="Banner">
+                <div class="transform-center">
+                    <div class="container">
+                        <div class="row justify-content-end">
+                            <div class="col-lg-7 align-self-center">
+                                <div class="right-side-content text-right">
+                                    <!-- <h1 class="text-custom-white fw-600">Increase takeout sales by 50%</h1>
+                                        <h3 class="text-custom-white fw-400">with the largest delivery platform in the
+                                            U.S. and Canada</h3> -->
+                                    <a href="restaurant.html" class="btn-second btn-submit">Learn More.</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay overlay-bg"></div>
+            </div>
+        </div>
+        </section>
+        <!-- Carousel end -->
+
+
+        <!-- looping start -->
+        <div class="container">
+            <br><br>
+            <h1 style="text-align: center;">Welcome Customer</h1>
+            <hr>
+            <form action="{% url 'customer_index' %}" method="post">
+
+                {% csrf_token %}
+
+                <div>
+
+
+
+                    <h4 class="text-center alert alert-info">Product Details</h4>
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+                        {% for hotelname in hotel %}
+                        <div class="card" style="width: 14rem;">
+                            <img src="{{ hotelname.hotelimage.url }}" class="card-img-top" alt="image">
+                            <div class="card" style="width: 10rem;">
+                                <h6>Order From</h6>
+                                <h5 class="card-title">{{ hotelname.hotelname }}</h5>
+
+                                <a href="{% url 'hotelproducts' hotelname.hotelname %}" class="btn btn-primary">Buy
+                                    Now</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+        </div>
+        </form>
+        <!-- looping end -->
+
+
+
+        <div class="copyright bg-white">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="payment-logo mb-md-20"> <span class="text-light-white fs-14 mr-3">We
+                                accept</span>
+                            <div class="payemt-icon">
+                                <img src="static/assets/img/card-front.jpg" alt="#">
+                                <img src="static/assets/img/visa.jpg" alt="#">
+                                <img src="static/assets/img/amex-card-front.png" alt="#">
+                                <img src="static/assets/img/mastercard.png" alt="#">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center medewithlove align-self-center">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <!-- modal boxes -->
+        <div class="modal fade" id="address-box">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title fw-700">Change Address</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="location-picker">
+                            <input type="text" class="form-control" placeholder="Enter a new address">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="search-box">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <div class="search-box p-relative full-width">
+                            <input type="text" class="form-control" placeholder="Pizza, Burger, Chinese">
+                        </div>
+                    </div>
+                    <div class="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+
+</body>
+
+</html>
+</body>
+
+</html>
+{% endblock content %}
