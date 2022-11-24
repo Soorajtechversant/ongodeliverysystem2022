@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 env = environ.Env()
 environ.Env.read_env()
 
+AUTH_USER_MODEL="burgerapp.UserLoginDetails"
 
 # Application definition
 

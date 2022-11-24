@@ -20,7 +20,7 @@
 
     <!-- Carousel -->
     <!-- slider -->
-
+<div class="container">
     <section class="about-us-slider swiper-container p-relative">
         <div class="swiper-wrapper">
             <div class="swiper-slide slide-item">
@@ -79,13 +79,14 @@
             </div>
         </div>
         </section>
+        </div>
         <!-- Carousel end -->
 
 
         <!-- looping start -->
         <div class="container">
             <br><br>
-            <h1 style="text-align: center;">Welcome Customer</h1>
+            <h1 style="text-align: center;">Welcome {{ user.username }}</h1>
             <hr>
             <form action="{% url 'customer_index' %}" method="post">
 

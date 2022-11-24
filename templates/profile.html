@@ -20,8 +20,7 @@
 
 <body>
  
-    <form action="{% url 'profile' %}" method="post">
-        {% csrf_token %}
+    <form action="{% url 'profile' %}" method="post"     enctype="multipart/form-data"> 
         <div class="container">
             <div class="main-body">
                 <div class="row">
@@ -70,6 +69,7 @@
 
 
 
+
                                 <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <h6 class="mb-0">Last Name</h6>
@@ -82,7 +82,34 @@
                                     
                                     
                                 </div>
-<!-- 
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Address</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <input type="text" name="address" class="form-control"
+                                            value="{{ user.address }}">
+</div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-sm-3">
+                                            <h6 class="mb-0">Image</h6>
+                                        </div>
+                                        <div class="card" style="width: 14rem;">
+                                            <img src="{{ hotelname.hotelimage.url }}" class="card-img-top" alt="image">
+                                           
+    </div>
+                                        </div>
+
+                                        <h6 class="mb-0">Change</h6>
+                                        
+                                     
+                                  
+                                      <input type="file" name="myfile">
+                                      <input type="submit"> 
+                                
                                 <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <h6 class="mb-0">Name</h6>
@@ -100,6 +127,9 @@
                                         <input type="text" name="email" class="form-control" value="{{ user.email }}">
                                     </div>
                                 </div>
+
+
+                                
                                 <div class="row mb-3">
                                     
                                     

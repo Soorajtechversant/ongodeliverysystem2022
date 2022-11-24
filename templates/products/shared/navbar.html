@@ -20,8 +20,9 @@
           
 
           {% if user.is_authenticated %}
-          
+          <img src="profile_pic" alt="Admin" class="rounded-circle p-1 bg-primary" width="35">
           <li style="color: rgb(30, 255, 0);">Hello, {{user.username}}</li>
+          
           <a class="nav-link" href="{% url 'profile' %}" >Profile</a>
           <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
           <li class="nav-item">

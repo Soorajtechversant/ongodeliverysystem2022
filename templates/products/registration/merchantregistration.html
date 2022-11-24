@@ -52,7 +52,7 @@
       <br><br>
         <h1 style="text-align: center;">Merchant Registration</h1>
         <hr>
-        <form action="{% url 'registration' %}" method="post">
+        <form action="{% url 'merchantregistration' %}" method="post">
           
           {% csrf_token %}
           <br>
@@ -81,10 +81,17 @@
         
           <br>
 
+          <label for="address" >Address </label><br>
+          <input type="text"  id="address" name="address" placeholder="enter address"><br>
+
+          <br>
+
           <label for="username" >Business Name</label><br>
           <input type="text"  id="username" name="hotelname" placeholder="enter Business Name"><br>
 
           <br>
+
+          
 
         <h3>Business Type</h3>
           <select class="form-dropdown validate[required]" id="businesstype" name="businesstype" style="width:310px" data-component="dropdown" required="">
@@ -103,8 +110,8 @@
             <form id="example4" ...>
              
               <p><input id="field_terms" type="checkbox" required name="terms"> I accept the <u>Terms and Conditions</u></p>
-              <p><input type="submit"></p>
-              </form>
+              
+              
 
             
           <button type="submit" class="btn btn-primary">Submit</button>

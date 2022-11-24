@@ -28,7 +28,7 @@ class HotelProducts(View):
 
 
 # Customer Registration
-class Registration(View):
+class CustomerRegistration(View):
     def get(self, request):
         return render(request, 'products/registration/registration.html')
 
@@ -39,15 +39,21 @@ class Registration(View):
         username = request.POST['username']
         password = request.POST['password']
         password2 = request.POST['password2']
-        # phn_number = request.POST['phone']
+        address = request.POST['address']
+        phn_number = request.POST['phn_number']
+        user_type="customer"
 
         if password == password2:
-            if User.objects.filter(username=username).exists():
+            if UserLoginDetails.objects.filter(username=username).exists():
                 messages.info(request, 'Username is already exist')
                 return redirect('registration')
             else:
-                user = User.objects.create_user(
-                    first_name=first_name, last_name=last_name, email=email, username=username, password=password)
+                login_cred = UserLoginDetails.objects.create(username=username,first_name=first_name, \
+                    last_name=last_name,email=email,address=address, phn_number=phn_number,user_type=user_type)
+                login_cred.set_password(password)
+                login_cred.save()
+                user = UserDetails.objects.create(
+                    username=login_cred,first_name=first_name, last_name=last_name, email=email,address=address,phn_number=phn_number)
                 user.save()
                 # sendsms(phn_number)
                 messages.info(request, 'customer registered')
@@ -73,19 +79,26 @@ class MerchantRegistration(View):
         hotelname = request.POST['hotelname']
         businesstype = request.POST['businesstype']
         username = request.POST['username']
+        address = request.POST['address']
         u1 = username
         password = request.POST['password']
         password2 = request.POST['password2']
+        user_type = "merchant"
 
         if password == password2:
-            if User.objects.filter(username=username).exists():
+            if UserLoginDetails.objects.filter(username=username).exists():
                 messages.info(request, 'Username is already exist')
                 return redirect('registration')
             else:
-                user = User.objects.create_user(first_name=first_name, last_name=last_name,
-                                                email=email, phone=phone, username=username,
-                                                password=password, hotelname=hotelname, businesstype=businesstype)
-                user.save()
+                login_cred = UserLoginDetails.objects.create(username=username,first_name=first_name, last_name=last_name, \
+                                                email=email,address=address, phn_number=phone, user_type=user_type)
+                login_cred.set_password(password)     
+                login_cred.save() 
+                print(login_cred)                          
+                merchant = MerchantDetails.objects.create(username=login_cred,first_name=first_name, last_name=last_name, \
+                                                email=email,address=address,phn_number=phone,hotel_name=hotelname, \
+                                                    bussiness_type=businesstype)
+                merchant.save()
 
                 messages.info(request, 'Merchant registered')
                 return redirect('owner_index')
@@ -100,6 +113,8 @@ class Customer_index(View):
         context = {
             'hotel': HotelName.objects.all()
         }
+        print(HotelName.objects.all())
+        
         return render(request, 'home.html', context)
 
 # Common Login page
@@ -115,7 +130,7 @@ class Login(View):
             password = request.POST['password']
             user = auth.authenticate(username=username, password=password)
             print(user)
-            if username == 'manager' and password == 'manager':
+            if user.user_type == "merchant":
                 auth.login(request, user)
                 return redirect('owner_index')
             elif user is not None:
@@ -148,7 +163,9 @@ def settings(request):
         request.user.customer.save()
     else:
         try:
-            if request.user.customer.membership:
+            customer= Customer.objects.get(user__username=request.user.username)
+            # customer = Customer.object.
+            if customer.membership:
                 membership = True
             if request.user.customer.cancel_at_period_end:
                 cancel_at_period_end = True
@@ -161,7 +178,7 @@ def settings(request):
 class CustomerProfile(ListView):
 
     def post(self, request):
-        data = User.objects.get(username=request.user, )
+        data = UserLoginDetails.objects.get(username=request.user.username, )
         if len(request.FILES) != 0:
             if len(data.profile) > 0:
                 os.remove(data.profile.path)
@@ -175,7 +192,7 @@ class CustomerProfile(ListView):
         return redirect('profile')
 
     def get(self, request):
-        data = User.objects.get(username=request.user)
+        data = UserLoginDetails.objects.get(username=request.user.username)
         context = {'data': data}
         return render(request, 'profile.html', context)
 
