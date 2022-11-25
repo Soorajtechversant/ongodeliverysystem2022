@@ -7,10 +7,12 @@ from django.contrib import auth, messages
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView  
+from django.views.generic import ListView ,TemplateView 
 from .forms import *
 from .models import *
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .send_sms import sendsms
+from django.urls import reverse
 
 
 
@@ -101,7 +103,7 @@ class MerchantRegistration(View):
                 merchant.save()
 
                 messages.info(request, 'Merchant registered')
-                return redirect('owner_index')
+                return redirect('auth/login')
 
         else:
             messages.info(request, 'password is not matching')
@@ -128,22 +130,27 @@ class Login(View):
         if request.method == 'POST':
             username = request.POST['username']
             password = request.POST['password']
+            try:
+                UserLoginDetails.objects.get(username=username)
+            except:
+                messages.info(request, 'Invalid credentials......')
+                return redirect("login")
             user = auth.authenticate(username=username, password=password)
-            print(user)
+            
             if user.user_type == "merchant":
                 auth.login(request, user)
                 return redirect('owner_index')
             elif user is not None:
                 auth.login(request, user)
                 return redirect("customer_index")
-            else:
-                messages.info(request, 'Invalid Credentials......')
-                return redirect("login")
+            # else:
+            #     messages.info(request, 'Invalid Credentials......')
+            #     return redirect("login")
 
 # The logout class
 
 
-class Logout(View):
+class Logout(LoginRequiredMixin,View):
     def get(self, request):
         auth.logout(request)
         return redirect('/')
@@ -175,7 +182,7 @@ def settings(request):
                                              'cancel_at_period_end': cancel_at_period_end})
 
 
-class CustomerProfile(ListView):
+class CustomerProfile(LoginRequiredMixin,ListView):
 
     def post(self, request):
         data = UserLoginDetails.objects.get(username=request.user.username, )
@@ -204,15 +211,26 @@ class EditProfile(View):
         return render(request, "profile.html", {'obj': data})
 
 
-class Owner_index(ListView):
-    context_object_name = 'hotelname'
-    queryset = HotelName.objects.all()
+class Owner_index(LoginRequiredMixin,TemplateView):
+    
     template_name = "products/productshop_owner/owner_index.html"
+    
+    def get_context_data(self,*args, **kwargs):
+        context = super(Owner_index,self).get_context_data(**kwargs)
+        context["hotelname"] = HotelName.objects.all()
+        merchant = MerchantDetails.objects.get(username=self.request.user)
+        print(merchant)
+        if not merchant.is_approved:
+            print(merchant.is_approved)
+            context['approval']= "needed"
+        print(context)
+        return context
+    
 
 
 # forloop
 
-class Add_product(View):
+class Add_product(LoginRequiredMixin,View):
     form_class = HotelForm
 
     def get(self, request):
@@ -230,7 +248,7 @@ class Add_product(View):
 
 
 # This class will delete the product details
-class Delete_product(View):
+class Delete_product(LoginRequiredMixin,View):
     def get(self, request, id):
         hotelname = HotelName.objects.get(id=id)
         hotelname.delete()
@@ -238,7 +256,7 @@ class Delete_product(View):
 
 
 # This class will edit/update the product details
-class Edit_product(View):
+class Edit_product(LoginRequiredMixin,View):
     def get(self, request, id):
         hotelname = HotelName.objects.get(id=id)
         form = HotelForm(instance=hotelname)
@@ -254,7 +272,7 @@ class Edit_product(View):
                 return redirect("owner_index")
 
 
-class ProductDetailView(View):
+class ProductDetailView(LoginRequiredMixin,View):
     @method_decorator(login_required)
     def get(self, request, id):
 
@@ -267,3 +285,26 @@ class ProductDetailView(View):
 
 
 
+class MerchantApprovalIndex(LoginRequiredMixin,ListView):
+    
+    context_object_name = 'approvals'
+    queryset = MerchantDetails.objects.filter(is_approved=False)
+    
+    template_name = 'admin/approvals.html'
+    
+ 
+class MerchantApproval(LoginRequiredMixin,View):
+    
+    def get(self, request,id):
+        
+        
+        merchant =  MerchantDetails.objects.get(id=id)
+        try:
+            merchant.is_approved = True
+            merchant.save()
+            return redirect('approvals')
+            # approvals = MerchantDetails.objects.filter(is_approved=False)
+        except:
+            print("something went wrong")
+        
+         

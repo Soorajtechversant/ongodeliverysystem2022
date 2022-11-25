@@ -20,20 +20,20 @@
           
 
           {% if user.is_authenticated %}
-          <img src="profile_pic" alt="Admin" class="rounded-circle p-1 bg-primary" width="35">
-          <li style="color: rgb(30, 255, 0);">Hello, {{user.username}}</li>
-          
-          <a class="nav-link" href="{% url 'profile' %}" >Profile</a>
-          <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'settings' %}" >Settings</a>
-           
-            <a href="{% url 'cart:cart_detail'  %}" class="btn btn-primary" style = "float:right">your cart here </a>
-  
-          </li>
+              <img src="profile_pic" alt="Admin" class="rounded-circle p-1 bg-primary" width="35">
+              <li style="color: rgb(30, 255, 0);">Hello, {{user.username}}</li>
+              <a class="nav-link" href="{% url 'profile' %}" >Profile</a>
+              {% if user.is_staff %}
+                  <a class="nav-link" href="{% url 'approvals' %}" >Aprovals</a>
+              {% endif %}
+              <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">Logout</a></li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'settings' %}" >Settings</a>
+                <a href="{% url 'cart:cart_detail'  %}" class="btn btn-primary" style = "float:right">your cart here </a>
+              </li>
           {% else %}
-          <li class="nav-item"> <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li></li>
-          <li class="nav-item"><a href="{% url 'registration' %}" class="nav-link">Register</a></li>
+              <li class="nav-item"> <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li></li>
+              <li class="nav-item"><a href="{% url 'registration' %}" class="nav-link">Register</a></li>
           {% endif %}
           
         </ul>

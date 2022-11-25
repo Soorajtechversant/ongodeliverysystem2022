@@ -18,12 +18,18 @@
 <body>
     <div class="container">
       <br><br>
+      
       {% if user.is_authenticated %}
       <h3>{{ index }}</h3>
           {% endif %}
 
         <h1 style="text-align: center;">Login</h1>
         <hr>
+        <div>
+          {% for message in messages %}
+          <h3 style="color: red; size:12px">{{ message }}</h3>
+          {% endfor %}
+        </div>
         <form action="{% url 'login' %}" method="post">
           
           {% csrf_token %}
@@ -48,11 +54,8 @@
             <a href="{% url 'registration'  %}" class="btn btn-primary">Signup</a>
           </div>
         </form>
-        <div>
-          {% for message in messages %}
-          <h3>{{ message }}</h3>
-          {% endfor %}
-        </div>
+        
+        
     </div>
     
 

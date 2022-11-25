@@ -17,6 +17,8 @@ urlpatterns = [
 
     path('owner_index/',Owner_index.as_view(),name="owner_index"),
     path('add_product/',Add_product.as_view(),name="add_product"),
+    path('approvals/',MerchantApprovalIndex.as_view(),name="approvals"),
+    path('merchant-approvals/<int:id>',MerchantApproval.as_view(),name="approve_merchant"),
     path('edit_product/<int:id>/',Edit_product.as_view(),name="edit_product"),
     path('Delete_product/<int:id>',Delete_product.as_view(),name="Delete_product"),
    
